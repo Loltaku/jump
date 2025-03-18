@@ -6,7 +6,7 @@ extends CharacterBody2D
 const MAX_SPEED := 80.0        # 水平移动最大速度
 const ACCELERATION := 600.0    # 加速度（像素/秒²）
 const DECELERATION := 1200.0   # 减速度（像素/秒²）
-const JUMP_VELOCITY := -239.0  # 跳跃初速度
+const JUMP_VELOCITY := -200.0  # 跳跃初速度
 const AIR_CONTROL := 0.5       # 空中移动控制系数
 #endregion
 
