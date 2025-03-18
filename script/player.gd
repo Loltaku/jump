@@ -90,5 +90,5 @@ func handle_air_animation() -> void:
 	if velocity.y < 0:
 		animated_sprite.play("jump")
 	else:
-		animated_sprite.play("fall")  # 需要添加下落动画
+		animated_sprite.play("fall")
 #endregion
