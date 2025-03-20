@@ -1,77 +1,65 @@
 extends CharacterBody2D
 
-@onready var animated_sprite = $AnimatedSprite2D
-@onready var coyote_timer = $CoyoteTimer
-@onready var rays = {
-	front = $RayCast2D/front,
-	bottom = $RayCast2D/bottom,
-	edge = $RayCast2D/edge
-}
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var coyote_timer: Timer = $CoyoteTimer
+@onready var rays = $RayCast2D
 
-# 运动参数
 const MAX_SPEED := 80.0
-const ACCEL := 90.0
-const DECEL := 1000.0
+const GROUND_ACCEL := 90.0
+const GROUND_DECEL := 1000.0
+const AIR_ACCEL := 45.0  # GROUND_ACCEL * 0.5
 const JUMP_VELOCITY := -250.0
-const AIR_CTRL := 0.5
+const COYOTE_TIME := 0.15
 
 var gravity := ProjectSettings.get_setting("physics/2d/default_gravity")
-var was_grounded := false
+var was_on_floor := false
 
-func _physics_process(delta):
-	# 重力处理
-	velocity.y += gravity * delta if not is_on_floor() else 0
+func _physics_process(delta: float) -> void:
+	handle_gravity(delta)
+	handle_jump()
+	handle_movement(delta)
+	update_animation()
+	move_and_slide()
+
+func handle_gravity(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+func handle_jump() -> void:
+	var is_on_floor_now = is_on_floor()
 	
 	# 土狼时间管理
-	handle_coyote_time()
+	if was_on_floor and not is_on_floor_now:
+		coyote_timer.start(COYOTE_TIME)
+	was_on_floor = is_on_floor_now
 	
-	# 跳跃处理
+	# 跳跃执行
 	if Input.is_action_just_pressed("jump") and can_jump():
-		perform_jump()
-	
-	# 移动处理
-	var dir = Input.get_axis("move_left", "move_right")
-	handle_movement(dir, delta)
-	
-	move_and_slide()
-	update_animation(dir)
-
-func handle_coyote_time():
-	let_grounded = is_on_floor()
-	if was_grounded and !grounded:
-		coyote_timer.start()
-	elif grounded:
+		velocity.y = JUMP_VELOCITY
 		coyote_timer.stop()
-	was_grounded = grounded
 
-func handle_movement(dir: float, delta: float):
-	var accel = ACCEL * (1.0 if is_on_floor() else AIR_CTRL)
-	var target_speed = dir * MAX_SPEED
-	var decel = DECEL if is_on_floor() else 0.0
+func handle_movement(delta: float) -> void:
+	var direction = Input.get_axis("move_left", "move_right")
+	var accel = GROUND_ACCEL if is_on_floor() else AIR_ACCEL
+	var decel = GROUND_DECEL if is_on_floor() else 0.0
 	
 	velocity.x = move_toward(
 		velocity.x, 
-		target_speed if dir != 0 else 0, 
-		(accel if dir != 0 else decel) * delta
+		direction * MAX_SPEED, 
+		(accel if direction else decel) * delta
 	)
 
-func update_animation(dir: float):
-	animated_sprite.flip_h = dir < 0 if dir != 0 else animated_sprite.flip_h
+func update_animation() -> void:
+	animated_sprite.flip_h = velocity.x < 0 if abs(velocity.x) > 10 else animated_sprite.flip_h
 	
-	match [is_on_floor(), velocity.y < 0]:
-		[true, _]: animated_sprite.play("run" if abs(velocity.x) > 10 else "idle")
-		[false, true]: animated_sprite.play("jump")
-		_: animated_sprite.play("fall")
+	if not is_on_floor():
+		animated_sprite.play("jump" if velocity.y < 0 else "fall")
+	else:
+		animated_sprite.play("run" if abs(velocity.x) > 10 else "idle")
 
 func can_jump() -> bool:
-	let_basic_jump = is_on_floor() or coyote_timer.time_left > 0
-	let_edge_jump = rays.bottom.is_colliding() and rays.front.is_colliding() and rays.edge.is_colliding()
-	return basic_jump or edge_jump
-
-func perform_jump():
-	velocity.y = JUMP_VELOCITY
-	coyote_timer.stop()
-	animated_sprite.play("jump")
-
-func _on_coyote_timer_timeout():
-	pass
+	return (is_on_floor() 
+		or not coyote_timer.is_stopped()
+		or (rays/bottom.is_colliding() 
+			and rays/front.is_colliding() 
+			and rays/edge.is_colliding()))
