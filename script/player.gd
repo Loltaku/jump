@@ -1,7 +1,11 @@
 extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var coyote_timer = $CoyoteTimer                                         # 获取计时器
+@onready var coyote_timer = $CoyoteTimer # 获取计时器
+@onready var front_ray = $RayCast2D/front
+@onready var bottom_ray = $RayCast2D/bottom
+@onready var edge_ray = $RayCast2D/edge
+
 
 #region 常量配置
 const MAX_SPEED := 80.0                                                         # 水平移动最大速度
@@ -11,16 +15,17 @@ const JUMP_VELOCITY := -250.0                                                   
 const AIR_CONTROL := 0.5                                                         # 空中移动控制系数
 #endregion
 
+#region 变量配置
 # 从项目设置获取重力值（重要修正！）
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var was_on_floor := false
+#endregion
 
 func _physics_process(delta: float) -> void:
 	#region 重力处理
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	#endregion
-	print("计时器状态：", "运行中" if not coyote_timer.is_stopped() else "停止")
 
 	#region 土狼时间计时器
 	var is_on_floor_now = is_on_floor()                                          # 地面状态变化检测
@@ -31,14 +36,29 @@ func _physics_process(delta: float) -> void:
 	#endregion
 	
 	#region 跳跃输入
-	if Input.is_action_just_pressed("jump"):
-		if is_on_floor_now or not coyote_timer.is_stopped():
+		func can_jump() -> bool:
+		# 基础地面检测
+		var basic_ground = is_on_floor() or coyote_timer.time_left > 0
+		# 边缘容错检测
+		var edge_tolerance = (
+			bottom_ray.is_colliding() and 
+			front_ray.is_colliding() and 
+			edge_ray.is_colliding()
+			)
+		# 最终跳跃条件：基础条件 或 (底部有地面且处于边缘)
+		return Input.is_action_just_pressed("jump") and (
+			basic_ground or 
+			(bottom_ray.is_colliding() and edge_tolerance)
+			)
+
+	if can_jump():
+		if not coyote_timer.is_stopped():
 			velocity.y = JUMP_VELOCITY
 			 # 无论何时跳跃都停止计时器
 			coyote_timer.stop()
 			# 立即播放跳跃动画
 			animated_sprite.play("jump")
-	 # 更新地面状态记录
+	# 更新地面状态记录
 	was_on_floor = is_on_floor_now
 	#endregion
 
@@ -54,9 +74,9 @@ func _physics_process(delta: float) -> void:
 	#endregion
 
 	move_and_slide()
-	update_animation(direction)                                                  # 分离动画更新逻辑
+	update_animation(direction)                                                 
 
-#region 移动逻辑函数
+	#region 移动逻辑函数
 func handle_ground_movement(direction: float, delta: float) -> void:
 	if direction != 0:
 		# 地面加速（使用move_toward实现更精确控制）
@@ -84,6 +104,7 @@ func handle_air_movement(direction: float, delta: float) -> void:
 #endregion
 
 #region 动画控制
+ # 分离动画更新逻辑
 func update_animation(direction: float) -> void:
 	# 方向翻转（优化判断逻辑）
 	if direction != 0:
