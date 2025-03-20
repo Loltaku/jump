@@ -8,6 +8,8 @@ extends Area2D
 var is_edge_detected := false
 var target_position := Vector2.ZERO
 
+signal edge_snap_triggered
+
 func _physics_process(delta):
 	var left_hit = $LowerRayLeft.is_colliding()
 	var right_hit = $LowerRayRight.is_colliding()
@@ -17,6 +19,7 @@ func _physics_process(delta):
 	
 	# 计算吸附目标位置
 	if is_edge_detected:
+		emit_signal("edge_snap_triggered")
 		var ray = $LowerRayLeft if left_hit else $LowerRayRight
 		var collision_point = ray.get_collision_point()
 		target_position = Vector2(collision_point.x, collision_point.y - body_height/2)
