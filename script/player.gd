@@ -4,15 +4,16 @@ extends CharacterBody2D
 @onready var coyote_timer = $CoyoteTimer                                         # 获取计时器
 
 #region 常量配置
-const MAX_SPEED := 100.0                                                         # 水平移动最大速度
-const ACCELERATION := 70.0                                                       # 加速度（像素/秒²）
-const DECELERATION := 150.0                                                      # 减速度（像素/秒²）
+const MAX_SPEED := 80.0                                                         # 水平移动最大速度
+const ACCELERATION := 90.0                                                       # 加速度（像素/秒²）
+const DECELERATION := 1000.0                                                      # 减速度（像素/秒²）
 const JUMP_VELOCITY := -250.0                                                    # 跳跃初速度
 const AIR_CONTROL := 0.5                                                         # 空中移动控制系数
 #endregion
 
 # 从项目设置获取重力值（重要修正！）
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var was_on_floor := false
 
 func _physics_process(delta: float) -> void:
 	#region 重力处理
@@ -21,21 +22,24 @@ func _physics_process(delta: float) -> void:
 	#endregion
 	print("计时器状态：", "运行中" if not coyote_timer.is_stopped() else "停止")
 
-	#region 土狼时间
-	if is_on_floor():
+	#region 土狼时间计时器
+	var is_on_floor_now = is_on_floor()                                          # 地面状态变化检测
+	if was_on_floor and not is_on_floor_now:                                     # 刚离开地面
 		coyote_timer.stop()                                                      # 如果在地面，停止计时
-	else:
-		if coyote_timer.is_stopped():                                            # 只在第一次离开时启动
-			coyote_timer.start()
+	elif is_on_floor_now:                                                        # 当前在地面
+		coyote_timer.start()
 	#endregion
 	
 	#region 跳跃输入
-	if Input.is_action_just_pressed("jump") and (
-		is_on_floor() or
-		 not coyote_timer.is_stopped()): 
-		velocity.y = JUMP_VELOCITY
-		coyote_timer.stop()                                                      # 跳跃后立即停止
-		animated_sprite.play("jump")                                             # 立即播放跳跃动画
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor_now or not coyote_timer.is_stopped():
+			velocity.y = JUMP_VELOCITY
+			 # 无论何时跳跃都停止计时器
+			coyote_timer.stop()
+			# 立即播放跳跃动画
+			animated_sprite.play("jump")
+	 # 更新地面状态记录
+	was_on_floor = is_on_floor_now
 	#endregion
 
 	#region 移动处理
@@ -50,7 +54,7 @@ func _physics_process(delta: float) -> void:
 	#endregion
 
 	move_and_slide()
-	update_animation(direction)  # 分离动画更新逻辑
+	update_animation(direction)                                                  # 分离动画更新逻辑
 
 #region 移动逻辑函数
 func handle_ground_movement(direction: float, delta: float) -> void:
