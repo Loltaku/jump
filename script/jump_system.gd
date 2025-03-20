@@ -5,9 +5,9 @@ extends Node
 @onready var coyote_timer: Timer = $"../CoyoteTimer"
 
 # 配置参数
-@export var jump_velocity := -350.0
+@export var jump_velocity := -239.0
 @export var coyote_time := 0.15
-@export var jump_buffer_time := 0.1
+@export var jump_buffer_time := 0.2
 
 # 状态变量
 var can_jump := true
