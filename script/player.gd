@@ -1,18 +1,33 @@
 extends CharacterBody2D
 
-@onready var movement: MovementSystem = $MovementSystem
-@onready var jump: JumpSystem = $JumpSystem
-@onready var anim: AnimationSystem = $AnimationSystem
+# 节点引用
+@onready var movement_system: MovementSystem = $MovementSystem
+@onready var jump_system: JumpSystem = $JumpSystem
+@onready var animation_system: AnimationSystem = $AnimationSystem
 
-func _physics_process(delta):
-	# 运动控制
-	var direction = Input.get_axis("left", "right")
-	velocity.x = movement.calculate_velocity(direction, delta)
+# 基础参数
+var gravity := ProjectSettings.get_setting("physics/2d/default_gravity") as float
+var was_on_floor := false
+
+func _physics_process(delta: float) -> void:
+	# 更新地面状态
+	var is_floor = is_on_floor()
+	jump_system.update_floor_state(is_floor, was_on_floor)
+	was_on_floor = is_floor
 	
-	# 跳跃控制
-	jump.try_jump(Input.is_action_just_pressed("jump"))
+	# 处理重力
+	if not is_floor:
+		velocity.y += gravity * delta
 	
-	# 动画更新
-	anim.update(direction, !is_on_floor())
+	# 获取输入
+	var direction = Input.get_axis("move_left", "move_right")
 	
+	# 系统协同
+	velocity.x = movement_system.calculate_velocity(velocity.x, direction, delta, is_floor)
+	jump_system.process_jump()  # 修改为统一入口
+	
+	# 执行移动
 	move_and_slide()
+	
+	# 更新动画
+	animation_system.update(direction, is_floor, velocity)
