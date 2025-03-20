@@ -1,13 +1,14 @@
 extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var coyote_timer = $CoyoteTimer                                         # 获取计时器
 
 #region 常量配置
-const MAX_SPEED := 100.0        # 水平移动最大速度
-const ACCELERATION := 70.0    # 加速度（像素/秒²）
-const DECELERATION := 150.0   # 减速度（像素/秒²）
-const JUMP_VELOCITY := -250.0  # 跳跃初速度
-const AIR_CONTROL := 0.5       # 空中移动控制系数
+const MAX_SPEED := 100.0                                                         # 水平移动最大速度
+const ACCELERATION := 70.0                                                       # 加速度（像素/秒²）
+const DECELERATION := 150.0                                                      # 减速度（像素/秒²）
+const JUMP_VELOCITY := -250.0                                                    # 跳跃初速度
+const AIR_CONTROL := 0.5                                                         # 空中移动控制系数
 #endregion
 
 # 从项目设置获取重力值（重要修正！）
@@ -18,15 +19,27 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	#endregion
+	print("计时器状态：", "运行中" if not coyote_timer.is_stopped() else "停止")
 
+	#region 土狼时间
+	if is_on_floor():
+		coyote_timer.stop()                                                      # 如果在地面，停止计时
+	else:
+		if coyote_timer.is_stopped():                                            # 只在第一次离开时启动
+			coyote_timer.start()
+	#endregion
+	
 	#region 跳跃输入
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if Input.is_action_just_pressed("jump") and (
+		is_on_floor() or
+		 not coyote_timer.is_stopped()): 
 		velocity.y = JUMP_VELOCITY
-		animated_sprite.play("jump")  # 立即播放跳跃动画
+		coyote_timer.stop()                                                      # 跳跃后立即停止
+		animated_sprite.play("jump")                                             # 立即播放跳跃动画
 	#endregion
 
 	#region 移动处理
-	var direction := Input.get_axis("move_left", "move_right")  # 使用自定义输入
+	var direction := Input.get_axis("move_left", "move_right")                   # 使用自定义输入
 	
 	# 地面移动
 	if is_on_floor():
@@ -92,3 +105,7 @@ func handle_air_animation() -> void:
 	else:
 		animated_sprite.play("fall")
 #endregion
+
+
+func _on_coyote_timer_timeout() -> void:
+	pass # Replace with function body.

@@ -115,3 +115,9 @@ frame_progress = 0.0406094
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_hjaqi")
 debug_color = Color(0.913725, 0.6, 0.701961, 0.419608)
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
