@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var movement_system: MovementSystem = $MovementSystem
 @onready var jump_system: JumpSystem = $JumpSystem
 @onready var animation_system: AnimationSystem = $AnimationSystem
+@onready var edge_detector: EdgeDetector = $EdgeDetector
 
 # 基础参数
 var gravity := ProjectSettings.get_setting("physics/2d/default_gravity") as float
@@ -26,8 +27,22 @@ func _physics_process(delta: float) -> void:
 	velocity.x = movement_system.calculate_velocity(velocity.x, direction, delta, is_floor)
 	jump_system.process_jump()  # 修改为统一入口
 	
+	 # 边缘吸附处理
+	if edge_detector.is_edge_detected and velocity.y > 0:
+		perform_edge_snap(delta)
+	
+	
 	# 执行移动
 	move_and_slide()
 	
 	# 更新动画
 	animation_system.update(direction, is_floor, velocity)
+
+func perform_edge_snap(delta: float):
+	# 平滑吸附移动
+	global_position = global_position.move_toward(edge_detector.target_position, edge_snap_speed * delta)
+	
+	# 重置下落速度
+	if global_position.distance_to(edge_detector.target_position) < 2.0:
+		velocity.y = 0
+		is_on_floor() # 强制更新地面状态
