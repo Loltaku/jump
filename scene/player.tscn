@@ -127,17 +127,15 @@ debug_color = Color(0.913725, 0.6, 0.701961, 0.419608)
 wait_time = 0.2
 one_shot = true
 
-[node name="RayContainer" type="Node" parent="."]
-
-[node name="front" type="RayCast2D" parent="RayContainer"]
+[node name="front_ray" type="RayCast2D" parent="."]
 position = Vector2(0, 4)
 target_position = Vector2(5, 0)
 
-[node name="bottom" type="RayCast2D" parent="RayContainer"]
+[node name="bottom_ray" type="RayCast2D" parent="."]
 position = Vector2(0, 4)
 target_position = Vector2(0, 8)
 
-[node name="edge" type="RayCast2D" parent="RayContainer"]
+[node name="edge_ray" type="RayCast2D" parent="."]
 position = Vector2(0, 4)
 target_position = Vector2(3, 7)
 

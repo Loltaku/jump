@@ -2,16 +2,18 @@ extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var coyote_timer: Timer = $CoyoteTimer
-@onready var rays = $RayCast2D
+@onready var front_ray: RayCast2D = $front_ray
+@onready var bottom_ray: RayCast2D = $bottom_ray
+@onready var edge_ray: RayCast2D = $edge_ray
 
 const MAX_SPEED := 80.0
-const GROUND_ACCEL := 90.0
-const GROUND_DECEL := 1000.0
-const AIR_ACCEL := 45.0  # GROUND_ACCEL * 0.5
+const GROUND_ACCEL := 90.0  # 地面加速
+const GROUND_DECEL := 1000.0  # 地面减速
+const AIR_ACCEL := 45.0  # 地面加速 * 0.5
 const JUMP_VELOCITY := -250.0
 const COYOTE_TIME := 0.15
 
-var gravity := ProjectSettings.get_setting("physics/2d/default_gravity")
+var gravity := ProjectSettings.get_setting("physics/2d/default_gravity") as float
 var was_on_floor := false
 
 func _physics_process(delta: float) -> void:
@@ -60,6 +62,6 @@ func update_animation() -> void:
 func can_jump() -> bool:
 	return (is_on_floor() 
 		or not coyote_timer.is_stopped()
-		or (rays/bottom.is_colliding() 
-			and rays/front.is_colliding() 
-			and rays/edge.is_colliding()))
+		or (bottom_ray.is_colliding() 
+			and front_ray.is_colliding() 
+			and edge_ray.is_colliding()))
