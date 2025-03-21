@@ -50,3 +50,10 @@ func _perform_jump():
 
 func _on_coyote_timer_timeout():
 	can_jump = false
+
+func process_wall_jump(wall_system: WallSystem):
+	if Input.is_action_just_pressed("jump") and wall_system.can_wall_jump():
+		var direction = -wall_system.last_wall_normal
+		get_parent().velocity.x = wall_system.wall_jump_force.x * direction
+		get_parent().velocity.y = wall_system.wall_jump_force.y
+		wall_system.wall_jump_timer.stop()
