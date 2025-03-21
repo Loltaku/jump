@@ -10,7 +10,7 @@ var target_position := Vector2.ZERO
 
 signal edge_snap_triggered
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var left_hit = $LowerRayLeft.is_colliding()
 	var right_hit = $LowerRayRight.is_colliding()
 	
