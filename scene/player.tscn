@@ -136,15 +136,15 @@ script = ExtResource("3_oh5ij")
 [node name="LowerRayLeft" type="RayCast2D" parent="EdgeDetector"]
 position = Vector2(0, 4)
 rotation = -0.523599
-target_position = Vector2(1.33013, 7.69615)
+target_position = Vector2(1.4641, 5.4641)
 
 [node name="LowerRayRight" type="RayCast2D" parent="EdgeDetector"]
 position = Vector2(0, 4)
 rotation = 0.523599
-target_position = Vector2(-1.33013, 7.69615)
+target_position = Vector2(-1.4641, 5.4641)
 
 [node name="EdgeCheck" type="CollisionShape2D" parent="EdgeDetector"]
-position = Vector2(0, 11.5)
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_oh5ij")
 
 [node name="CoyoteTimer" type="Timer" parent="."]
