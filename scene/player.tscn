@@ -1,86 +1,19 @@
-[gd_scene load_steps=13 format=3 uid="uid://c7x5sowinyf72"]
+[gd_scene load_steps=4 format=3 uid="uid://c7x5sowinyf72"]
 
 [ext_resource type="Script" uid="uid://bt0s3u16s83ef" path="res://script/player.gd" id="1_hjaqi"]
-[ext_resource type="Texture2D" uid="uid://bv5h4o72vk02p" path="res://assess/AnimationSheet.png" id="2_hjaqi"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xo3ru"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(0, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hjaqi"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(24, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fvtld"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(48, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ct4mp"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(72, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_s4jxa"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(96, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oh5ij"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(120, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hp4bs"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(144, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_g2vtq"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(168, 72, 24, 24)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_hjaqi"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xo3ru")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hjaqi")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fvtld")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ct4mp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_s4jxa")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_oh5ij")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hp4bs")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_g2vtq")
-}],
-"loop": true,
-"name": &"jump",
-"speed": 8.0
-}]
+[ext_resource type="Texture2D" uid="uid://bko0vtinst505" path="res://assess/AnimationSheet.png" id="2_hjaqi"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hjaqi"]
-radius = 5.0
+radius = 6.0
 height = 16.0
 
 [node name="player" type="CharacterBody2D"]
 script = ExtResource("1_hjaqi")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_hjaqi")
-animation = &"jump"
-frame = 2
-frame_progress = 0.0427725
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_hjaqi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 2)
+position = Vector2(0, 3)
 shape = SubResource("CapsuleShape2D_hjaqi")
 debug_color = Color(0.913725, 0.6, 0.701961, 0.419608)
