@@ -1,103 +1,46 @@
-[gd_scene load_steps=25 format=3 uid="uid://c7x5sowinyf72"]
+[gd_scene load_steps=13 format=3 uid="uid://c7x5sowinyf72"]
 
-[ext_resource type="Script" uid="uid://qkthin8uxn3t" path="res://script/player.gd" id="1_hjaqi"]
+[ext_resource type="Script" uid="uid://bt0s3u16s83ef" path="res://script/player.gd" id="1_hjaqi"]
 [ext_resource type="Texture2D" uid="uid://bv5h4o72vk02p" path="res://assess/AnimationSheet.png" id="2_hjaqi"]
-[ext_resource type="Script" uid="uid://cuiw1na0aob2a" path="res://script/movement_system.gd" id="3_fvtld"]
-[ext_resource type="Script" uid="uid://c3nn25h6tyorb" path="res://script/edge_detector.gd" id="3_oh5ij"]
-[ext_resource type="Script" uid="uid://cepxjqpurbrgi" path="res://script/jump_system.gd" id="4_ct4mp"]
-[ext_resource type="Script" uid="uid://du8uplwyyntmx" path="res://script/animation_system.gd" id="5_s4jxa"]
-[ext_resource type="Script" uid="uid://dluoapn56gyy1" path="res://script/wall_system.gd" id="7_hp4bs"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hjaqi"]
-radius = 3.0
-height = 18.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dk1vr"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_xo3ru"]
 atlas = ExtResource("2_hjaqi")
-region = Rect2(24, 0, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ml7e8"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(0, 0, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ihjo1"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(24, 0, 24, 24)
+region = Rect2(0, 72, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hjaqi"]
 atlas = ExtResource("2_hjaqi")
-region = Rect2(0, 24, 24, 24)
+region = Rect2(24, 72, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fvtld"]
 atlas = ExtResource("2_hjaqi")
-region = Rect2(24, 24, 24, 24)
+region = Rect2(48, 72, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ct4mp"]
 atlas = ExtResource("2_hjaqi")
-region = Rect2(48, 24, 24, 24)
+region = Rect2(72, 72, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_s4jxa"]
 atlas = ExtResource("2_hjaqi")
-region = Rect2(72, 24, 24, 24)
+region = Rect2(96, 72, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oh5ij"]
 atlas = ExtResource("2_hjaqi")
-region = Rect2(96, 24, 24, 24)
+region = Rect2(120, 72, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hp4bs"]
 atlas = ExtResource("2_hjaqi")
-region = Rect2(120, 24, 24, 24)
+region = Rect2(144, 72, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2vtq"]
 atlas = ExtResource("2_hjaqi")
-region = Rect2(144, 24, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2fvbb"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(168, 24, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_34jf3"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(48, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_u7b46"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(72, 72, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j4wxg"]
-atlas = ExtResource("2_hjaqi")
-region = Rect2(96, 72, 24, 24)
+region = Rect2(168, 72, 24, 24)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_hjaqi"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dk1vr")
-}],
-"loop": true,
-"name": &"fall",
-"speed": 5.0
+"texture": SubResource("AtlasTexture_xo3ru")
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ml7e8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ihjo1")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 2.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dk1vr")
-}],
-"loop": true,
-"name": &"jump",
-"speed": 10.0
-}, {
-"frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_hjaqi")
 }, {
@@ -118,97 +61,26 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g2vtq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2fvbb")
 }],
 "loop": true,
-"name": &"run",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_34jf3")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_u7b46")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j4wxg")
-}],
-"loop": true,
-"name": &"wall_slide",
-"speed": 5.0
+"name": &"jump",
+"speed": 8.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_oh5ij"]
-size = Vector2(8, 3.5)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hjaqi"]
+radius = 5.0
+height = 16.0
 
 [node name="player" type="CharacterBody2D"]
 script = ExtResource("1_hjaqi")
-edge_snap_speed = null
-edge_snap_threshold = null
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 3)
-shape = SubResource("CapsuleShape2D_hjaqi")
-debug_color = Color(0.913725, 0.6, 0.701961, 0.419608)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_hjaqi")
-animation = &"wall_slide"
-autoplay = "idle"
-frame_progress = 0.0624719
+animation = &"jump"
+frame = 2
+frame_progress = 0.0427725
 
-[node name="EdgeDetector" type="Area2D" parent="."]
-position = Vector2(0, 1)
-script = ExtResource("3_oh5ij")
-
-[node name="LowerRayLeft" type="RayCast2D" parent="EdgeDetector"]
-position = Vector2(0, 4)
-rotation = -0.523599
-target_position = Vector2(1.4641, 5.4641)
-collide_with_areas = true
-
-[node name="LowerRayRight" type="RayCast2D" parent="EdgeDetector"]
-position = Vector2(0, 4)
-rotation = 0.523599
-target_position = Vector2(-1.4641, 5.4641)
-collide_with_areas = true
-
-[node name="EdgeCheck" type="CollisionShape2D" parent="EdgeDetector"]
-position = Vector2(0, 9.25)
-shape = SubResource("RectangleShape2D_oh5ij")
-
-[node name="WallSystem" type="Node" parent="."]
-script = ExtResource("7_hp4bs")
-wall_slide_speed = 50.0
-
-[node name="WallRays" type="Marker2D" parent="WallSystem"]
-
-[node name="Left" type="RayCast2D" parent="WallSystem/WallRays"]
-position = Vector2(0, 5)
-target_position = Vector2(-5, 0)
-
-[node name="Right" type="RayCast2D" parent="WallSystem/WallRays"]
-position = Vector2(0, 5)
-target_position = Vector2(5, 0)
-
-[node name="WallJumpTimer" type="Timer" parent="WallSystem"]
-
-[node name="CoyoteTimer" type="Timer" parent="."]
-wait_time = 0.2
-one_shot = true
-
-[node name="MovementSystem" type="Node" parent="."]
-script = ExtResource("3_fvtld")
-
-[node name="JumpSystem" type="Node" parent="."]
-script = ExtResource("4_ct4mp")
-
-[node name="StateMachine" type="Node" parent="."]
-
-[node name="AnimationSystem" type="Node" parent="."]
-script = ExtResource("5_s4jxa")
-
-[connection signal="timeout" from="CoyoteTimer" to="JumpSystem" method="_on_coyote_timer_timeout"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("CapsuleShape2D_hjaqi")
+debug_color = Color(0.913725, 0.6, 0.701961, 0.419608)
