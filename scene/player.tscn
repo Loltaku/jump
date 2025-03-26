@@ -17,7 +17,3 @@ texture = ExtResource("2_hjaqi")
 position = Vector2(0, 3)
 shape = SubResource("CapsuleShape2D_hjaqi")
 debug_color = Color(0.913725, 0.6, 0.701961, 0.419608)
-
-[node name="JumpPressTimer" type="Timer" parent="."]
-wait_time = 0.2
-one_shot = true

@@ -1,12 +1,7 @@
 extends CharacterBody2D
 
-@onready var jump_press_timer: Timer = $JumpPressTimer
-
 const SPEED = 100.0
-const BIG_JUMP_VELOCITY = -300.0
-const SMALL_JUMP_VELOCITY = -150.0
-
-var JUMP_PRESS_TIMER = false
+const JUMP_VELOCITY = -239.0
 
 func _physics_process(delta: float) -> void:
 	# 添加重力
@@ -15,7 +10,7 @@ func _physics_process(delta: float) -> void:
 
 	#处理跳跃
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = SMALL_JUMP_VELOCITY
+		velocity.y = JUMP_VELOCITY
 	
 	#处理移动
 	var direction := Input.get_axis("ui_left", "ui_right")
